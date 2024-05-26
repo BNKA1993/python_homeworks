@@ -7,3 +7,6 @@ class Address:
         self.house = house
         self.flat = flat
     
+    def show_adress(self):
+        return f'{self.index}, {self.city}, {self.street}, {self.house}, {self.flat}'
+    

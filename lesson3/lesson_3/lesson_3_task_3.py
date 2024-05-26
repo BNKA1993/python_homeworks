@@ -6,4 +6,4 @@ from_adress = Address("656456", "Spb", "Pushkina", "40", "1")
 
 mailing = Mailing(to_adress, from_adress, 560, "track12345")
 
-print(f"Отправление {mailing.track} из {mailing.from_adress.index}, {mailing.from_adress.city}, {mailing.from_adress.street}, {mailing.from_adress.house}, {mailing.from_adress.flat} в {mailing.to_adress.index}, {mailing.to_adress.city}, {mailing.to_adress.street}, {mailing.to_adress.house}, {mailing.to_adress.flat}. Стоимость {mailing.cost} рублей")
+print(f"Отправление {mailing.track} из {mailing.from_adress.show_adress()} в {mailing.to_adress.show_adress()}. Стоимость {mailing.cost} рублей")
