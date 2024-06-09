@@ -1,9 +1,9 @@
-Локатор кнопки Войти - 'span.do4_40_9'
+Локатор кнопки Войти - '[data-widget=profileMenuAnonymous]>div>div'
 
-Локатор кнопки Заказы - 'span.do4_14_9'
+Локатор кнопки Заказы - '[data-widget=orderInfo]>a'
 
-Локатор ссылки OZON Job (в футере) - 'a.h5a.f7d_9'
+Локатор ссылки OZON Job (в футере) - '[data-widget=footer] a'
 
-Локатор выбора валюты (верхний левый угол страницы) - 'button.dn1_9.ga14-a.undefined'
+Локатор выбора валюты (верхний левый угол страницы) - '[data-widget=selectedCurrency]>div'
 
-Локатор выпадашки Везде (в поисковой строке) - 'span.ab1a_32.tsBody400Small'
+Локатор выпадашки Везде (в поисковой строке) - '[action="/search"] span[title="Везде"]'

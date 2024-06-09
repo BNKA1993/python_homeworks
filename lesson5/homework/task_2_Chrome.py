@@ -1,4 +1,3 @@
-from time import sleep
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
@@ -17,4 +16,5 @@ for _ in range(3):
     button_input.send_keys(Keys.RETURN)
     button_input.click()
 
+print(f"Клик выполнен ({_ + 1}/3)")
 driver.quit()

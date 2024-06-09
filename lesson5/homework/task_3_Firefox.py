@@ -1,12 +1,8 @@
-from time import sleep
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from webdriver_manager.firefox import GeckoDriverManager  # Изменено здесь
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.alert import Alert
 
 driver = webdriver.Firefox(service=FirefoxService(
@@ -25,5 +21,5 @@ for _ in range(3):
     # driver.close()
     print("Вывод Б")
 
-
+print(f"Клик на синюю кнопку выполнен ({_ + 1}/3)")
 driver.quit()

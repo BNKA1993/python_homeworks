@@ -3,7 +3,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 
 driver = webdriver.Chrome(service=ChromeService(
     ChromeDriverManager().install()))
@@ -23,7 +22,7 @@ input_password = driver.find_element(By.CSS_SELECTOR, password_locator)
 input_password.send_keys("SuperSecretPassword!")
 sleep(1)
 
-login_locator = "i.fa.fa-2x.fa-sign-in"
+login_locator = "button[type=submit]"
 input_login = driver.find_element(By.CSS_SELECTOR, login_locator)
 input_login.click()
 sleep(1)

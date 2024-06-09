@@ -1,4 +1,3 @@
-from time import sleep
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
@@ -13,15 +12,15 @@ driver.maximize_window()
 driver.get("http://the-internet.herokuapp.com/add_remove_elements/")
 
 # пять раз кликаем на кнопку Add Element
-button_locator = 'button[onclick="addElement()"]'
-button_input = driver.find_element(By.CSS_SELECTOR, button_locator)
+button_locator = '//button[text()="Add Element"]'
+button_input = driver.find_element(By.XPATH, button_locator)
 
 for i in range(1, 6):
     button_input.send_keys(Keys.RETURN)
     
 # собираем со страницы список кнопок Delete
-buttons_delete_locators = 'button[onclick="deleteElement()"]'
-buttons = driver.find_elements(By.CSS_SELECTOR, buttons_delete_locators)
+buttons_delete_locators = '//button[text()="Delete"]'
+buttons = driver.find_elements(By.XPATH, buttons_delete_locators)
 
 # выводим на экран размер списка
 print(len(buttons))
