@@ -18,7 +18,7 @@ waiter.until(
 
 images = driver.find_elements(By.TAG_NAME, "img")
 
-third_image_src = images[2].get_attribute("src")
+third_image_src = images[3].get_attribute("src")
 print(third_image_src)
 
 driver.quit()
