@@ -14,16 +14,12 @@ class EmployeeTable:
         "select_by_name": text("select * from company where name = 'Company Empoyees 8'"),
         "get max id": "select MAX(id) from employee",
         "insert new": text(
-            "insert into employee(first_name, last_name, company_id, is_active, phone, email, middle_name, birthdate, avatar_url) "
-            "values (:first_name, :last_name, :company_id, :is_active, :phone, :email, :middle_name, :birthdate, :url)"
-        ),
+            "insert into employee( first_name, last_name,company_id, is_active, phone, email, middle_name, birthdate, avatar_url) values (:first_name, :last_name, :company_id, :is_active, :phone, :email, :middle_name, :birthdate, :url)"),
         "update by id": text(
-            "update employee set first_name=:first_name, last_name=:last_name, email=:email, middle_name=:middle_name, "
-            "is_active=:is_active, phone=:phone, birthdate=:birthdate, avatar_url=:url where id=:id_emp"
-        )
+            "update employee set first_name=:first_name, last_name=:last_name, email=:email, middle_name=:middle_name, is_active=:is_active, phone=:phone, birthdate=:birthdate,avatar_url=:url where id=:id_emp")
     }
 
-    def __init__(self, connection_string: str) -> None:
+    def __init__(self, connection_string: str):
         """
         Инициализирует соединение с базой данных.
 
@@ -34,61 +30,78 @@ class EmployeeTable:
     @allure.step("db.получить сотрудника по id")
     def get_emp_by_id(self, emp_id: int) -> list:
         """
-        Находит сотрудника по ID.
+        Метод находит сотрудника по id.
 
         :param emp_id: ID сотрудника.
-        :return: Список записей с информацией о сотруднике.
+        :return: Список записей сотрудника.
+        :rtype: list
         """
-        query = self.__db.execute(self.__scripts["select by id"], id_to_select=emp_id)
-        allure.attach(str(query.context.cursor.query), 'SQL', allure.attachment_type.TEXT)
+        query = self.__db.execute(self.__scripts["select by id"],
+                                  id_to_select=emp_id)
+        allure.attach(str(query.context.cursor.query), 'SQL',
+                      allure.attachment_type.TEXT)
         return query.fetchall()
 
     @allure.step("db.получить список сотрудников по id компании")
     def get_list_emps_by_id_company(self, com_id: int) -> list:
         """
-        Находит всех сотрудников компании и возвращает список словарей с информацией о сотрудниках.
+        Метод находит всех сотрудников компании
+        и возвращает список записей с информацией по сотрудникам.
 
         :param com_id: ID компании.
-        :return: Список записей с информацией о сотрудниках.
+        :return: Список сотрудников.
+        :rtype: list
         """
-        query = self.__db.execute(self.__scripts["select list emp by id company"], company_id=com_id)
-        allure.attach(str(query.context.cursor.query), 'SQL', allure.attachment_type.TEXT)
+        query = self.__db.execute(
+            self.__scripts["select list emp by id company"], company_id=com_id)
+        allure.attach(str(query.context.cursor.query), 'SQL',
+                      allure.attachment_type.TEXT)
         return query.fetchall()
 
     @allure.step("db.получить список id сотрудников по id компании")
     def get_list_id_emps_by_id_company(self, com_id: int) -> list:
         """
-        Находит всех сотрудников компании и возвращает список их ID.
+        Метод находит всех сотрудников компании
+        и возвращает список их ID.
 
         :param com_id: ID компании.
         :return: Список ID сотрудников.
+        :rtype: list
         """
         list_id_emp = []
+
         id_emp = self.get_list_emps_by_id_company(com_id)
-        for emp in id_emp:
-            list_id_emp.append(emp[0])
+        for i in range(len(id_emp)):
+            get_id_emp = id_emp[i][0]
+            list_id_emp.append(get_id_emp)
+
         return list_id_emp
 
     @allure.step("db.получить max id сотрудника")
     def get_emp_max_id(self) -> int:
         """
-        Находит наибольшее значение ID сотрудника и возвращает его.
+        Метод находит наибольшее значение ID сотрудника
+        и возвращает его.
 
-        :return: Наибольшее значение ID сотрудника.
+        :return: Наибольшее значение ID.
+        :rtype: int
         """
         query = self.__db.execute(self.__scripts["get max id"])
-        allure.attach(str(query.context.cursor.query), 'SQL', allure.attachment_type.TEXT)
+        allure.attach(str(query.context.cursor.query), 'SQL',
+                      allure.attachment_type.TEXT)
         max_id_emp = query.fetchall()[0][0]
         return max_id_emp
 
     @allure.step("db.создать нового сотрудника компании")
-    def create_employee(self, com_id: int, is_active: bool, dict_creds_emp: dict) -> None:
+    def create_employee(self, com_id: int, is_active: bool,
+                        dict_creds_emp: dict) -> None:
         """
-        Создает нового сотрудника компании с указанными значениями ключей.
+        Метод создает нового сотрудника компании с заданными
+        значениями ключей.
 
-        :param com_id: ID компании.
+        :param com_id: ID компании, в которую будет добавлен сотрудник.
         :param is_active: Статус активности сотрудника.
-        :param dict_creds_emp: Словарь с данными сотрудника (first_name, last_name, phone, url, birthdate, email, middle_name).
+        :param dict_creds_emp: Словарь с данными сотрудника.
         """
         query = self.__db.execute(self.__scripts["insert new"],
                                   company_id=com_id,
@@ -100,19 +113,22 @@ class EmployeeTable:
                                   birthdate=dict_creds_emp["birthdate"],
                                   email=dict_creds_emp["email"],
                                   middle_name=dict_creds_emp["middle_name"])
-        allure.attach(str(query.context.cursor.query), 'SQL', allure.attachment_type.TEXT)
+        allure.attach(str(query.context.cursor.query), 'SQL',
+                      allure.attachment_type.TEXT)
 
     @allure.step("db.создать несколько ({num_emp}) новых сотрудников компании")
-    def create_employees_mult(self, com_id: int, num_emp: int, is_active: bool) -> None:
+    def create_employees_mult(self, com_id: int, num_emp: int,
+                              is_active: bool) -> None:
         """
-        Создает заданное количество сотрудников компании с генерируемыми значениями ключей.
+        Метод создает заданное количество сотрудников компании
+        с генерируемыми значениями ключей.
 
-        :param com_id: ID компании.
-        :param num_emp: Количество сотрудников для создания.
+        :param com_id: ID компании, в которую будут добавлены сотрудники.
+        :param num_emp: Количество создаваемых сотрудников.
         :param is_active: Статус активности сотрудников.
         """
         fake = Faker("ru_RU")
-        for _ in range(num_emp):
+        for i in range(num_emp):
             first_name = fake.first_name()
             last_name = fake.last_name()
             email = fake.email()
@@ -120,7 +136,8 @@ class EmployeeTable:
             phone = fake.random_number(digits=11, fix_len=True)
             birthdate = '2005-04-26'
             url = fake.url()
-            max_id = self.get_emp_max_id() + 1
+            max_id_b = self.get_emp_max_id()
+            max_id = max_id_b + 1
             self.__db.execute(self.__scripts["insert new"], id=max_id,
                               company_id=com_id, first_name=first_name,
                               last_name=last_name, is_active=is_active,
@@ -130,45 +147,49 @@ class EmployeeTable:
     @allure.step("db.удалить сотрудника по id")
     def delete(self, emp_id: int) -> None:
         """
-        Удаляет сотрудника по ID.
+        Метод удаляет сотрудника компании по ID.
 
         :param emp_id: ID сотрудника.
         """
-        query = self.__db.execute(self.__scripts["delete by id"], id_to_delete=emp_id)
-        allure.attach(str(query.context.cursor.query), 'SQL', allure.attachment_type.TEXT)
+        query = self.__db.execute(self.__scripts["delete by id"],
+                                  id_to_delete=emp_id)
+        allure.attach(str(query.context.cursor.query), 'SQL',
+                      allure.attachment_type.TEXT)
 
     @allure.step("db.удалить список сотрудников по id")
     def delete_list_emps(self, emp_ids: list) -> None:
         """
-        Удаляет сотрудников по списку их ID.
+        Метод удаляет сотрудников компании по списку их ID.
 
-        :param emp_ids: Список ID сотрудников для удаления.
+        :param emp_ids: Список ID сотрудников.
         """
         for emp_id in emp_ids:
-            query = self.__db.execute(self.__scripts["delete by id"], id_to_delete=emp_id)
-            allure.attach(str(query.context.cursor.query), 'SQL', allure.attachment_type.TEXT)
+            query = self.__db.execute(self.__scripts["delete by id"],
+                                      id_to_delete=emp_id)
+            allure.attach(str(query.context.cursor.query), 'SQL',
+                          allure.attachment_type.TEXT)
 
     @allure.step("db.удалить список сотрудников по id компании")
     def delete_list_emps_by_company_id(self, company_id: int) -> None:
         """
-        Удаляет сотрудников компании по ID компании. Сначала получает список ID сотрудников по ID компании,
-        затем удаляет сотрудников по полученным ID.
+        Метод удаляет сотрудников компании по ID компании.
+        Сначала получает список ID сотрудников, затем
+        удаляет их по списку.
 
         :param company_id: ID компании.
         """
         list_id_emp = self.get_list_id_emps_by_id_company(company_id)
-        for emp_id in list_id_emp:
-            query = self.__db.execute(self.__scripts["delete by id"], id_to_delete=emp_id)
-            allure.attach(str(query.context.cursor.query), 'SQL', allure.attachment_type.TEXT)
+        self.delete_list_emps(list_id_emp)
 
-    @allure.step("db.обновить данные сотрудника")
-    def patch_employee(self, id_emp: int, is_active: bool, dict_creds_emp: dict) -> None:
+    @allure.step("db.изменить информацию о сотруднике по id")
+    def patch_employee(self, id_emp: int, is_active: bool,
+                       dict_creds_emp: dict) -> None:
         """
-        Обновляет данные сотрудника по ID.
+        Метод изменяет информацию о сотруднике по ID.
 
         :param id_emp: ID сотрудника.
         :param is_active: Новый статус активности сотрудника.
-        :param dict_creds_emp: Словарь с новыми данными сотрудника (first_name, last_name, phone, url, birthdate, email, middle_name).
+        :param dict_creds_emp: Словарь с новыми данными сотрудника.
         """
         query = self.__db.execute(self.__scripts["update by id"],
                                   id_emp=id_emp,
@@ -180,13 +201,15 @@ class EmployeeTable:
                                   birthdate=dict_creds_emp["birthdate"],
                                   email=dict_creds_emp["email"],
                                   middle_name=dict_creds_emp["middle_name"])
-        allure.attach(str(query.context.cursor.query), 'SQL', allure.attachment_type.TEXT)
+        allure.attach(str(query.context.cursor.query), 'SQL',
+                      allure.attachment_type.TEXT)
 
-    @allure.step("db.получить компании")
+    @allure.step("db.получить список компаний по названию")
     def get_companies(self) -> list:
         """
-        Получает список компаний по заданному запросу.
+        Метод получает список компаний по заданному названию.
 
-        :return: Список записей с информацией о компаниях.
+        :return: Список записей компаний.
+        :rtype: list
         """
         return self.__db.execute(self.__scripts["select_by_name"]).fetchall()
